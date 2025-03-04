@@ -13,20 +13,36 @@ const Navbar = () => {
     };
 
     return (
-        <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
+        <header className="fixed top-0 left-0 w-full bg-[#1C1C1C] text-white py-4 px-10 z-50">
             <nav className="flex justify-between items-center">
+                {/* Logo */}
                 <Link href="/">
-                    <Image src="/logo.png" alt="Logo" width={100} height={30} />
+                    <Image src="/logoblack.png" alt="Logo" width={120} height={40} />
                 </Link>
 
-                <div className="flex items-end">
-                    <button 
-                        onClick={handleLoginClick} 
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-                    >
-                        Login/Register
-                    </button>
-                </div>
+                {/* Menu de Navegação */}
+                <ul className="flex space-x-8 text-lg font-medium">
+                    <li>
+                        <Link href="/" className="hover:text-gray-400 transition">Home</Link>
+                    </li>
+                    <li>
+                        <Link href="/services" className="hover:text-gray-400 transition">Serviços</Link>
+                    </li>
+                    <li>
+                        <Link href="/stand" className="hover:text-gray-400 transition">Stand</Link>
+                    </li>
+                    <li>
+                        <Link href="/contact" className="hover:text-gray-400 transition">Contato</Link>
+                    </li>
+                </ul>
+
+                {/* Botão de Login/Registro */}
+                <button 
+                    onClick={handleLoginClick} 
+                    className="px-5 py-2 bg-white text-black rounded-md hover:bg-gray-300 transition"
+                >
+                    Login/Registo
+                </button>
             </nav>
         </header>
     );
