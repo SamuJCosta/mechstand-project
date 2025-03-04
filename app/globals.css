@@ -5,6 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-poppins: "Poppins", sans-serif;
+  --font-smooch-sans: "Smooch Sans", cursive;
 }
 
 @media (prefers-color-scheme: white) {
@@ -17,5 +19,22 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins);
+}
+
+/* Classes utilitárias para uso direto */
+.font-poppins {
+  font-family: var(--font-poppins);
+}
+
+.font-smooch-sans {
+  font-family: var(--font-smooch-sans);
+}
+
+.font-bold {
+  font-weight: 800;
+}
+
+.font-normal {
+  font-weight: 400;
 }
