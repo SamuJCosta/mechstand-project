@@ -78,7 +78,7 @@ const Login = () => {
 
           {/* Link para Registro */}
           <div className="mt-4 text-center">
-            <p className="text-sm text-black">Não tem uma conta? <Link href="/api/auth/register" className="text-black font-normal hover:underline">Registe-se</Link></p>
+            <p className="text-sm text-black">Não tem uma conta? <Link href="/register" className="text-black font-normal hover:underline">Registe-se</Link></p>
           </div>
         </div>
 
