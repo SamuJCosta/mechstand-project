@@ -8,17 +8,47 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // Pode ser email ou username
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Utilizador:", email, "Senha:", password);
+    setError("");
+    setLoading(true);
+  
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier, password }),
+    });
+  
+    const data = await res.json();
+    setLoading(false);
+  
+    if (!res.ok) {
+      setError(data.error || "Ocorreu um erro ao fazer login.");
+      return;
+    }
+  
+    // Guardar tokens no localStorage
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+  
+    // Redirecionar conforme o papel do utilizador
+    if (data.role === "ADMIN") {
+      window.location.href = "/admin";
+    } else if (data.role === "MECHANIC") {
+      window.location.href = "/mecanico";
+    } else {
+      window.location.href = "/cliente";
+    }
   };
+  
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-white p-4 font-poppins">
-      {/* CONTAINER PRINCIPAL */}
       <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white overflow-hidden">
         {/* SEÇÃO DO FORMULÁRIO */}
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 mr-2">
@@ -29,15 +59,19 @@ const Login = () => {
             <p className="font-poppins font-normal text-sm text-gray-500 mt-2">Estamos felizes por tê-lo de volta!</p>
           </div>
 
+          {/* MENSAGEM DE ERRO */}
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
           {/* FORMULÁRIO */}
           <form onSubmit={handleLogin} className="w-full space-y-4">
             <div className="relative">
               <UserIcon className="absolute left-3 top-3 w-5 h-5 text-black " />
               <input
-                type="email"
-                placeholder="Utilizador"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="Utilizador ou Email"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                required
                 className="w-full pl-10 pr-3 py-3 border rounded-lg bg-gray-200 text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
@@ -49,6 +83,7 @@ const Login = () => {
                 placeholder="Palavra-Passe"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
                 className="w-full pl-10 pr-3 py-3 border rounded-lg bg-gray-200 text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
@@ -56,8 +91,9 @@ const Login = () => {
             <button
               type="submit"
               className="w-full bg-black text-white py-3 rounded-lg font-normal hover:bg-gray-800 transition"
+              disabled={loading}
             >
-              Próximo
+              {loading ? "Aguarde..." : "Próximo"}
             </button>
           </form>
 
