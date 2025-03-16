@@ -21,7 +21,7 @@ const Register = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    
+
     if (password !== confirmPassword) {
       setError("As palavras-passe não coincidem!");
       return;
@@ -32,12 +32,7 @@ const Register = () => {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: username, // O nome no backend é "name", então usamos o username aqui
-        username,
-        email,
-        password,
-      }),
+      body: JSON.stringify({ name: username, username, email, password }),
     });
 
     const data = await res.json();
@@ -56,13 +51,15 @@ const Register = () => {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-white p-4 font-poppins">
-      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white overflow-hidden">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl bg-white overflow-hidden gap-10">
         {/* SEÇÃO DO FORMULÁRIO */}
-        <div className="w-full md:w-1/2 flex flex-col justify-center p-8 mr-2">
+        <div className="w-full md:w-1/2 flex flex-col justify-center p-8">
           {/* LOGO */}
           <div className="flex flex-col items-center mb-6">
             <Image src="/logo.png" alt="MechStand" width={150} height={150} />
-            <h1 className="font-smooch-sans font-bold text-3xl md:text-4xl text-black">Registe-se</h1>
+            <h1 className="font-poopins text-3xl md:text-6xl font-bold text-black">
+              Registe-se
+            </h1>
             <p className="font-poppins font-normal text-sm text-gray-500 mt-2">
               Venha fazer parte da família MechStand!
             </p>
@@ -133,7 +130,9 @@ const Register = () => {
 
           {/* Registo com Google e Facebook */}
           <div className="mt-6">
-            <p className="text-sm text-center text-black mb-3 font-semibold">Registo com Outros</p>
+            <p className="text-sm text-center text-black mb-3 font-semibold">
+              Registo com Outros
+            </p>
             <div className="space-y-3">
               <button className="flex items-center justify-center border px-4 py-3 rounded-lg hover:bg-gray-100 transition w-full text-black font-bold">
                 <FcGoogle className="w-6 h-6 mr-2" />
@@ -148,8 +147,14 @@ const Register = () => {
         </div>
 
         {/* SEÇÃO DA IMAGEM */}
-        <div className="hidden md:block md:w-1/2 bg-white relative rounded-r-lg overflow-hidden">
-          <Image src="/Mudanças.png" alt="mudancas" layout="fill" objectFit="cover" className="rounded-xl" />
+        <div className="hidden md:flex md:w-1/2 h-auto bg-white relative rounded-r-lg overflow-hidden">
+          <Image
+            src="/Mudanças.png"
+            alt="mudancas"
+            width={500}
+            height={500}
+            className="w-full h-full object-contain rounded-xl"
+          />
         </div>
       </div>
     </div>

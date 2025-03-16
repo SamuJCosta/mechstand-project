@@ -1,5 +1,5 @@
 import { Button } from '../components/button';
-import Image from 'next/image';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,10 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../components/dropdown-menu';
-import Link from 'next/link';
 
 export async function User() {
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -19,29 +17,21 @@ export async function User() {
           variant="outline"
           size="icon"
           className="overflow-hidden rounded-full"
-        >
-        </Button>
+        ></Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem>
+          <button>Perfil</button>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <button>Definições</button>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <button type="submit">Sign Out</button>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <form
-              action={async () => {
-                'use server';
-              }}
-            >
-              <button type="submit">Sign Out</button>
-            </form>
-          </DropdownMenuItem>
-        : (
-          <DropdownMenuItem>
-            <Link href="/login">Sign In</Link>
-          </DropdownMenuItem>
-        )
       </DropdownMenuContent>
     </DropdownMenu>
   );
