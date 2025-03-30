@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "supersecret-access";
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "supersecret-refresh";
+const JWT_SECRET = process.env.JWT_SECRET || 'secret'
 
 // Função para encriptar senhas
 export async function hashPassword(password: string) {
@@ -18,6 +19,14 @@ export async function verifyPassword(password: string, hashedPassword: string) {
 // Gerar Token de Acesso (Expira em 60s)
 export function generateAccessToken(userId: number, role: string) {
   return jwt.sign({ userId, role }, ACCESS_SECRET, { expiresIn: "60s" });
+}
+
+export function verifyAccessToken(token: string) {
+  try {
+    return jwt.verify(token, ACCESS_SECRET)
+  } catch {
+    return null
+  }
 }
 
 // Gerar Refresh Token (Expira em 7 dias)

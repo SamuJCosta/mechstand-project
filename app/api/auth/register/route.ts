@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "@/lib/auth";
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
@@ -33,12 +31,18 @@ export async function POST(req: Request) {
         email,
         password: hashedPassword,
         role: "CLIENT",
+        profileImage: "/userimage.png",
       },
     });
 
     return NextResponse.json({ message: "Cliente registado com sucesso!" }, { status: 201 });
 
   } catch (error) {
-    return NextResponse.json({ error: "Erro ao registar cliente!" }, { status: 500 });
+    console.error("Erro no registo:", error)
+    return NextResponse.json(
+      { error: "Erro ao registar cliente!", details: (error as Error).message },
+      { status: 500 }
+    );
   }
+  
 }

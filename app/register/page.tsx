@@ -7,6 +7,7 @@ import { UserIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 import { TfiEmail } from "react-icons/tfi";
+import { PasswordStrength } from "../components/password";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -67,7 +68,9 @@ const Register = () => {
 
           {/* MENSAGEM DE ERRO OU SUCESSO */}
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-          {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+          {success && (
+            <p className="text-green-500 text-center mb-4">{success}</p>
+          )}
 
           {/* FORMULÁRIO */}
           <form onSubmit={handleRegister} className="w-full space-y-4">
@@ -105,6 +108,8 @@ const Register = () => {
                 required
                 className="w-full pl-10 pr-3 py-3 border rounded-lg bg-gray-200 text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
+              {/* Mostrador de força da password */}
+              <PasswordStrength password={password} />
             </div>
 
             <div className="relative">
@@ -136,11 +141,15 @@ const Register = () => {
             <div className="space-y-3">
               <button className="flex items-center justify-center border px-4 py-3 rounded-lg hover:bg-gray-100 transition w-full text-black font-bold">
                 <FcGoogle className="w-6 h-6 mr-2" />
-                <span className="text-sm font-medium">Registo com <b>Google</b></span>
+                <span className="text-sm font-medium">
+                  Registo com <b>Google</b>
+                </span>
               </button>
               <button className="flex items-center justify-center border px-4 py-3 rounded-lg hover:bg-gray-100 transition w-full text-black font-bold">
                 <FaFacebook className="w-6 h-6 text-blue-600 mr-2" />
-                <span className="text-sm font-medium">Registo com <b>Facebook</b></span>
+                <span className="text-sm font-medium">
+                  Registo com <b>Facebook</b>
+                </span>
               </button>
             </div>
           </div>

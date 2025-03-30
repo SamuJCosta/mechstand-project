@@ -16,10 +16,12 @@ model user {
   role         String
   createdAt    DateTime @default(now())
   refreshToken String?
+  profileImage String? @default("/userimage.png")
+
 }
 
 enum Role {
   ADMIN
   CLIENT
-  MECHANIC
+  MECANICO
 }

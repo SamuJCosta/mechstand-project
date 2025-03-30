@@ -39,7 +39,7 @@ const Login = () => {
     // Redirecionar conforme o papel do utilizador
     if (data.role === "ADMIN") {
       window.location.href = "/admin";
-    } else if (data.role === "MECHANIC") {
+    } else if (data.role === "MECANICO") {
       window.location.href = "/mecanico";
     } else {
       window.location.href = "/cliente";
