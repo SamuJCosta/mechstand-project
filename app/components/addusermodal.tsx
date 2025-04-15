@@ -4,6 +4,8 @@ import { UserIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { TfiEmail } from "react-icons/tfi";
 import { useState } from "react";
 import { PasswordStrength } from "../components/password";
+import { authFetch } from "@/utils/authFetch";
+
 
 export default function AddUserModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [username, setUsername] = useState("");
@@ -17,36 +19,33 @@ export default function AddUserModal({ isOpen, onClose }: { isOpen: boolean; onC
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+  
     if (password !== confirmPassword) {
       setError("As palavras-passe não coincidem!");
       return;
     }
-
+  
     setLoading(true);
-    
-    const token = localStorage.getItem("accessToken");
-    console.log("Token a usar:", token);
-
-    const res = await fetch("/api/admin/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: JSON.stringify({ username, email, password, role }),
-    });
-    
-
-    const data = await res.json();
-    setLoading(false);
-
-    if (!res.ok) {
-      setError(data.error || "Erro ao criar utilizador.");
-      return;
+  
+    try {
+      const response = await authFetch("/api/admin/create", {
+        method: "POST",
+        body: JSON.stringify({ username, email, password, role }),
+      });
+  
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || "Erro ao criar utilizador.");
+        setLoading(false);
+        return;
+      }
+  
+      onClose();
+      setLoading(false);
+    } catch (error) {
+      setError("Erro ao criar utilizador. Tente novamente.");
+      setLoading(false);
     }
-
-    onClose();
   };
 
   return (

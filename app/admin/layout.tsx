@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -21,12 +25,42 @@ import { User } from "./user";
 import Providers from "./providers";
 import { NavItem } from "./nav-item";
 import { SearchInput } from "./search";
+import { authFetch } from "@/utils/authFetch"; // Importar o authFetch para verificar a role do usuário
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuthorization = async () => {
+      try {
+        const res = await authFetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.role === "ADMIN") {
+            setIsAuthorized(true);
+          } else {
+            router.push("/login");
+          }
+        } else {
+          router.push("/login");
+        }
+      } catch (error) {
+        router.push("/login");
+      }
+    };
+
+    checkAuthorization();
+  }, [router]);
+
+  if (!isAuthorized) {
+    return null;
+  }
+
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -38,7 +72,7 @@ export default function DashboardLayout({
             <User />
           </header>
           <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
-            {children} {}
+            {children}
           </main>
         </div>
       </main>

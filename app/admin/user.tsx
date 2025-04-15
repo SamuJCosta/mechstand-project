@@ -9,24 +9,23 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '../components/dropdown-menu'
+import { authFetch } from '@/utils/authFetch'
 
 export function User() {
   const [user, setUser] = useState<{ name: string; email: string; profileImage?: string } | null>(null)
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
-
-      const res = await fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-
-      if (res.ok) {
-        const data = await res.json()
-        setUser(data)
+      try {
+        const res = await authFetch('/api/auth/me')
+        if (res.ok) {
+          const data = await res.json()
+          setUser(data)
+        }
+      } catch (error) {
+        console.error('Erro ao buscar usuário:', error)
       }
     }
 
@@ -54,7 +53,8 @@ export function User() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>
-          {user?.name || 'Conta'}<br />
+          {user?.name || 'Conta'}
+          <br />
           <span className="text-xs text-muted-foreground">{user?.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -66,7 +66,9 @@ export function User() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <button onClick={handleLogout} className="text-red-500">Sign Out</button>
+          <button onClick={handleLogout} className="text-red-500">
+            Sign Out
+          </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -19,10 +19,12 @@ import { UserActions } from "./useractions";
 import { RoleFilter } from "../../components/rolefilter";
 
 export default async function UserList({
-  searchParams,
+  searchParams: rawSearchParams,
 }: {
-  searchParams: { page?: string; role?: string };
+  searchParams: Promise<{ page?: string; role?: string }>;
 }) {
+  const searchParams = await rawSearchParams;
+
   const page = Number(searchParams?.page || 1);
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
@@ -120,7 +122,7 @@ export default async function UserList({
                 }`}
                 href={`?page=${page - 1}`}
               >
-                Prev
+                Anterior
               </a>
               <a
                 className={`px-3 py-1 border rounded ${
@@ -128,7 +130,7 @@ export default async function UserList({
                 }`}
                 href={`?page=${page + 1}`}
               >
-                Next
+                Próximo
               </a>
             </div>
           </div>
