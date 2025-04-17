@@ -2,8 +2,8 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Input } from "../components/input";
-import { Spinner } from "../components/icons";
+import { Input } from "../../../../components/domains/shared/ui/input";
+import { Spinner } from "../../../../components/domains/shared/ui/icons";
 import { Search } from "lucide-react";
 
 export function SearchInput() {

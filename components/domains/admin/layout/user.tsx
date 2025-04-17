@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Button } from '../components/button'
+import { Button } from '../../shared/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../components/dropdown-menu'
+} from '../../../dropdown-menu'
 import { authFetch } from '@/utils/authFetch'
 
 export function User() {

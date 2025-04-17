@@ -1,6 +1,6 @@
 "use client";
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "../components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../../tooltip";
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

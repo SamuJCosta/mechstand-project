@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import AddUserModal from "../../components/addusermodal"
+import AddUserModal from "./add/addusermodal"
 
 export function UserActions() {
   const [open, setOpen] = useState(false)

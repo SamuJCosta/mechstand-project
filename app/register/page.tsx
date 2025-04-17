@@ -7,7 +7,7 @@ import { UserIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 import { TfiEmail } from "react-icons/tfi";
-import { PasswordStrength } from "../components/password";
+import { PasswordStrength } from "../../components/domains/shared/passwordstrenght";
 
 const Register = () => {
   const [username, setUsername] = useState("");

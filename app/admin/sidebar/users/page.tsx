@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import Image from "next/image";
+import Image from "next/image"
 import {
   Table,
   TableHeader,
@@ -7,32 +7,33 @@ import {
   TableHead,
   TableRow,
   TableCell,
-} from "../../components/table";
+} from "../../../../components/table"
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
-} from "../../components/card";
-import { Badge } from "../../components/badge";
-import { UserActions } from "./useractions";
-import { RoleFilter } from "../../components/rolefilter";
+} from "../../../../components/card"
+import { Badge } from "../../../../components/domains/shared/ui/badge"
+import { UserActions } from "../../../../components/domains/admin/users/useractions"
+import { RoleFilter } from "../../../../components/rolefilter"
+import { UserRowActions } from "../../../../components/domains/admin/users/userrowactions"
 
 export default async function UserList({
   searchParams: rawSearchParams,
 }: {
-  searchParams: Promise<{ page?: string; role?: string }>;
+  searchParams: Promise<{ page?: string; role?: string }>
 }) {
-  const searchParams = await rawSearchParams;
+  const searchParams = await rawSearchParams
 
-  const page = Number(searchParams?.page || 1);
-  const pageSize = 10;
-  const skip = (page - 1) * pageSize;
+  const page = Number(searchParams?.page || 1)
+  const pageSize = 10
+  const skip = (page - 1) * pageSize
 
   const roleFilter =
     searchParams?.role && searchParams.role !== "TODOS"
       ? { role: searchParams.role }
-      : {};
+      : {}
 
   const [users, total] = await Promise.all([
     prisma.user.findMany({
@@ -44,9 +45,9 @@ export default async function UserList({
     prisma.user.count({
       where: roleFilter,
     }),
-  ]);
+  ])
 
-  const totalPages = Math.ceil(total / pageSize);
+  const totalPages = Math.ceil(total / pageSize)
 
   return (
     <>
@@ -70,6 +71,7 @@ export default async function UserList({
                 <TableHead>Email</TableHead>
                 <TableHead>Função</TableHead>
                 <TableHead>Criado em</TableHead>
+                <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -104,6 +106,9 @@ export default async function UserList({
                   <TableCell>
                     {new Date(user.createdAt).toLocaleDateString("pt-PT")}
                   </TableCell>
+                  <TableCell>
+                    <UserRowActions user={user} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -137,5 +142,5 @@ export default async function UserList({
         </CardContent>
       </Card>
     </>
-  );
+  )
 }

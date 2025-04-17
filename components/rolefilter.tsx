@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Button } from '../components/button'
+import { Button } from './domains/shared/ui/button'
 
 const roles = ['TODOS', 'ADMIN', 'CLIENT', 'MECANICO']
 
@@ -12,7 +12,7 @@ export function RoleFilter() {
 
   const handleFilter = (role: string) => {
     const query = role === 'TODOS' ? '' : `?role=${role}`
-    router.push(`/admin/users${query}`)
+    router.push(`/admin/sidebar/users${query}`)
   }
 
   return (
