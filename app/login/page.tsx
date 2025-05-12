@@ -8,10 +8,14 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 
 const Login = () => {
-  const [identifier, setIdentifier] = useState(""); // Pode ser email ou username
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [showResetForm, setShowResetForm] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetMessage, setResetMessage] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,11 +36,9 @@ const Login = () => {
       return;
     }
 
-    // Guardar tokens no localStorage
     localStorage.setItem("accessToken", data.accessToken);
     localStorage.setItem("refreshToken", data.refreshToken);
 
-    // Redirecionar conforme o papel do utilizador
     if (data.role === "ADMIN") {
       window.location.href = "/admin";
     } else if (data.role === "MECANICO") {
@@ -46,12 +48,22 @@ const Login = () => {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: resetEmail }),
+    });
+    const data = await res.json();
+    setResetMessage(data.message);
+  };
+
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-white p-4 font-poppins">
       <div className="flex flex-col md:flex-row w-full max-w-7xl bg-white overflow-hidden gap-10">
         {/* SEÇÃO DO FORMULÁRIO */}
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8 mr-2">
-          {/* LOGO */}
           <div className="flex flex-col items-center mb-6">
             <Image src="/logo.png" alt="MechStand" width={150} height={150} />
             <h1 className="font-poopins text-3xl md:text-6xl font-bold text-black">
@@ -62,13 +74,11 @@ const Login = () => {
             </p>
           </div>
 
-          {/* MENSAGEM DE ERRO */}
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-          {/* FORMULÁRIO */}
           <form onSubmit={handleLogin} className="w-full space-y-4">
             <div className="relative">
-              <UserIcon className="absolute left-3 top-3 w-5 h-5 text-black " />
+              <UserIcon className="absolute left-3 top-3 w-5 h-5 text-black" />
               <input
                 type="text"
                 placeholder="Utilizador ou Email"
@@ -100,11 +110,40 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Login com Google e Facebook */}
+          <div className="mt-2 text-center">
+            <button
+              type="button"
+              onClick={() => setShowResetForm(!showResetForm)}
+              className="text-sm text-black hover:underline"
+            >
+              Esqueceu-se da palavra-passe?
+            </button>
+          </div>
+
+          {showResetForm && (
+            <form onSubmit={handleForgotPassword} className="mt-4 space-y-3">
+              <input
+                type="email"
+                placeholder="O seu email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+                className="w-full px-3 py-2 border rounded-lg bg-gray-200 text-black focus:outline-none focus:ring-2 focus:ring-gray-400"
+              />
+              <button
+                type="submit"
+                className="w-full bg-black text-white py-2 rounded-lg hover:bg-black transition"
+              >
+                Enviar link de recuperação
+              </button>
+              {resetMessage && (
+                <p className="text-center text-sm text-green-600">{resetMessage}</p>
+              )}
+            </form>
+          )}
+
           <div className="mt-6">
-            <p className="text-sm text-center text-black mb-3">
-              Login com Outros
-            </p>
+            <p className="text-sm text-center text-black mb-3">Login com Outros</p>
             <div className="space-y-3">
               <button className="flex items-center justify-center border px-4 py-3 rounded-lg hover:bg-gray-100 transition w-full text-black font-normal">
                 <FcGoogle className="w-6 h-6 mr-2" />
@@ -121,14 +160,10 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Link para Registro */}
           <div className="mt-4 text-center">
             <p className="text-sm text-black">
               Não tem uma conta?{" "}
-              <Link
-                href="/register"
-                className="text-black font-normal hover:underline"
-              >
+              <Link href="/register" className="text-black font-normal hover:underline">
                 Registe-se
               </Link>
             </p>
