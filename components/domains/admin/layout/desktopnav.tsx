@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ClipboardList, Wrench, Users, CarFront, Settings } from "lucide-react"
+import { ClipboardList, Wrench, Users, CarFront, Settings, House } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../../tooltip"
 import { NavItem } from "@/components/domains/admin/layout/nav-item"
 
@@ -10,7 +10,7 @@ export const DesktopNav = () => (
   <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
     <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
       <NavItem href="/admin" label="Dashboard">
-        <Image src="/Logo.png" alt="MechStand Logo" width={100} height={100} className="h-4 w-4" />
+        <House className="h-5 w-5" />
       </NavItem>
       <NavItem href="/admin/sidebar/stand" label="Stand">
         <CarFront className="h-5 w-5" />

@@ -2,24 +2,27 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ClipboardList, Wrench, Users, CarFront, Settings, House, CalendarDays } from "lucide-react"
+import { ClipboardList, Wrench, Users, CarFront, Settings, House } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../../tooltip"
-import { NavItem } from "@/components/domains/cliente/layout/nav-item"
+import { NavItem } from "@/components/domains/mecanico/layout/nav-item"
 
 export const DesktopNav = () => (
   <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
     <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-      <NavItem href="/cliente" label="Home">
+      <NavItem href="/mecanico" label="Home">
         <House className="h-5 w-5" />
       </NavItem>
-      <NavItem href="/cliente/sidebar/stand" label="Stand">
+      <NavItem href="/mecanico/sidebar/stand" label="Stand">
         <CarFront className="h-5 w-5" />
       </NavItem>
-      <NavItem href="/cliente/sidebar/veiculos" label="Veiculos">
+      <NavItem href="/mecanico/sidebar/mecanicos" label="Mecânicos">
         <Wrench className="h-5 w-5" />
       </NavItem>
-      <NavItem href="/cliente/sidebar/agendar" label="Agendar">
-        <CalendarDays className="h-5 w-5" />
+      <NavItem href="/mecanico/sidebar/users" label="Usuários">
+        <Users className="h-5 w-5" />
+      </NavItem>
+      <NavItem href="/mecanico/sidebar/stock" label="Stock">
+        <ClipboardList className="h-5 w-5" />
       </NavItem>
     </nav>
     <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
