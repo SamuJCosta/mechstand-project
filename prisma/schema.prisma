@@ -18,6 +18,7 @@ model user {
   refreshToken String?
   profileImage String? @default("/userimage.png")
 
+  pecasCriadas Peca[]   @relation("UserPecas")
 }
 
 enum Role {
@@ -26,3 +27,15 @@ enum Role {
   MECANICO
 }
 
+model Peca {
+  id          Int      @id @default(autoincrement())
+  nome        String
+  descricao   String?
+  quantidade  Int      @default(0)
+  preco       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  criadoPor   user     @relation("UserPecas", fields: [criadoPorId], references: [id])
+  criadoPorId Int
+}

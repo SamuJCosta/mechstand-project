@@ -8,7 +8,7 @@ export function UserActions() {
 
   return (
     <>
-      <div className="flex gap-4"> {/* Adicionando o contêiner flex para os botões */}
+      <div className="flex gap-4">
         <button
           className="bg-white border border-gray-300 px-3 py-1.5 rounded-md text-sm hover:bg-gray-50"
           onClick={() => alert('Exportar ainda não implementado')}
