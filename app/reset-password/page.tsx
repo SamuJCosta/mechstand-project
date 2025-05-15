@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { PasswordStrength } from "../../components/domains/shared/passwordstrenght";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -14,6 +14,7 @@ const ResetPassword = () => {
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const router = useRouter();
 
   useEffect(() => {
     if (!token) {
@@ -22,7 +23,6 @@ const ResetPassword = () => {
     }
   }, [token]);
 
-  // Enviar requisição para resetar a senha
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
@@ -51,10 +51,15 @@ const ResetPassword = () => {
     });
 
     const data = await res.json();
+
     if (res.ok) {
       setMessage("Senha atualizada com sucesso!");
       setNewPassword("");
       setConfirmPassword("");
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } else {
       setMessage(data.error || data.message || "Erro ao redefinir a senha!");
     }

@@ -24,6 +24,9 @@ export const DesktopNav = () => (
       <NavItem href="/mecanico/sidebar/stock" label="Stock">
         <ClipboardList className="h-5 w-5" />
       </NavItem>
+      <NavItem href="/mecanico/sidebar/carros" label="Carros">
+        <ClipboardList className="h-5 w-5" />
+      </NavItem>
     </nav>
     <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
       <Tooltip>
