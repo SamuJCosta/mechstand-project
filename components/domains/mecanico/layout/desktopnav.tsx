@@ -18,7 +18,7 @@ export const DesktopNav = () => (
       <NavItem href="/mecanico/sidebar/mecanicos" label="Mecânicos">
         <Wrench className="h-5 w-5" />
       </NavItem>
-      <NavItem href="/mecanico/sidebar/users" label="Usuários">
+      <NavItem href="/mecanico/sidebar/anuncio" label="Anuncios">
         <Users className="h-5 w-5" />
       </NavItem>
       <NavItem href="/mecanico/sidebar/stock" label="Stock">
