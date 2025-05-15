@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import { verifyAccessToken } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/sendwelcomeemail";
 
 export async function POST(req: Request) {
   try {
@@ -41,6 +42,15 @@ export async function POST(req: Request) {
         name: username,
       },
     });
+
+    if (role === "MECANICO") {
+      try {
+        await sendWelcomeEmail(email, username, role, password);
+      } catch (emailError) {
+        console.error("Erro ao enviar email:", emailError);
+        // Poderias decidir se queres falhar a criação do user ou ignorar erro de email
+      }
+    }
 
     return NextResponse.json({ message: "Utilizador criado com sucesso!", user });
   } catch (err) {

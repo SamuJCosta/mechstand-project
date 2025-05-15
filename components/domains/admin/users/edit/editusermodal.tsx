@@ -1,60 +1,70 @@
-"use client"
+"use client";
 
-import { Dialog } from "@headlessui/react"
-import Image from "next/image"
-import { UserIcon, LockClosedIcon } from "@heroicons/react/24/outline"
-import { TfiEmail } from "react-icons/tfi"
-import { useState, useEffect } from "react"
-import { authFetch } from "@/utils/authFetch"
+import { Dialog } from "@headlessui/react";
+import Image from "next/image";
+import { UserIcon } from "@heroicons/react/24/outline";
+import { TfiEmail } from "react-icons/tfi";
+import { useState, useEffect } from "react";
+import { authFetch } from "@/utils/authFetch";
 
-export default function EditUserModal({ user, isOpen, onClose }: { user: any; isOpen: boolean; onClose: () => void }) {
-  const [name, setName] = useState("")
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [role, setRole] = useState("CLIENT")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+export default function EditUserModal({
+  user,
+  isOpen,
+  onClose,
+  onSuccess,
+}: {
+  user: any;
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("CLIENT");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (user) {
-      setName(user.name)
-      setUsername(user.username)
-      setEmail(user.email)
-      setRole(user.role)
+      setName(user.name);
+      setUsername(user.username);
+      setEmail(user.email);
+      setRole(user.role);
     }
-  }, [user])
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
       const response = await authFetch("/api/admin/users/edit", {
         method: "PUT",
         body: JSON.stringify({ id: user.id, name, username, email, role }),
-      })
+      });
 
       if (!response.ok) {
-        const data = await response.json()
-        setError(data.error || "Erro ao atualizar utilizador.")
-        setLoading(false)
-        return
+        const data = await response.json();
+        setError(data.error || "Erro ao atualizar utilizador.");
+        setLoading(false);
+        return;
       }
 
-      onClose()
-      setLoading(false)
+      onSuccess?.() // chama onSuccess se definido
+      onClose();
+      setLoading(false);
     } catch (error) {
-      setError("Erro ao atualizar utilizador. Tente novamente.")
-      setLoading(false)
+      setError("Erro ao atualizar utilizador. Tente novamente.");
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50 overflow-y-auto font-poppins">
       <div className="flex min-h-screen items-center justify-center px-4">
         <Dialog.Panel className="bg-white rounded-2xl shadow-xl p-10 w-full max-w-xl">
-          {/* LOGO + TÍTULO */}
           <div className="flex flex-col items-center mb-6">
             <Image src="/logo.png" alt="MechStand" width={100} height={100} />
             <Dialog.Title as="h1" className="text-3xl md:text-4xl font-bold text-black mt-4">
@@ -110,6 +120,7 @@ export default function EditUserModal({ user, isOpen, onClose }: { user: any; is
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 className="w-full pl-3 pr-3 py-3 border rounded-lg bg-gray-100 text-black"
+                disabled={user.role === "ADMIN"} // desativa se for admin
               >
                 <option value="CLIENT">Cliente</option>
                 <option value="MECANICO">Mecânico</option>
@@ -128,5 +139,5 @@ export default function EditUserModal({ user, isOpen, onClose }: { user: any; is
         </Dialog.Panel>
       </div>
     </Dialog>
-  )
+  );
 }

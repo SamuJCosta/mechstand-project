@@ -1,10 +1,17 @@
 'use client'
 
-import { useState } from "react"
-import AddUserModal from "./add/addusermodal"
+import { useState } from 'react'
+import AddUserModal from './add/addusermodal'
+import { useRouter } from 'next/navigation'
 
 export function UserActions() {
   const [open, setOpen] = useState(false)
+  const router = useRouter()
+
+  const handleSuccess = () => {
+    router.refresh()
+    setOpen(false)
+  }
 
   return (
     <>
@@ -23,7 +30,11 @@ export function UserActions() {
         </button>
       </div>
 
-      <AddUserModal isOpen={open} onClose={() => setOpen(false)} />
+      <AddUserModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onSuccess={handleSuccess}
+      />
     </>
   )
 }

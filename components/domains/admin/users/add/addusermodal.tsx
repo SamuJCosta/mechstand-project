@@ -8,7 +8,15 @@ import { useState } from "react";
 import { PasswordStrength } from "../../../shared/passwordstrenght";
 import { authFetch } from "@/utils/authFetch";
 
-export default function AddUserModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export default function AddUserModal({
+  isOpen,
+  onClose,
+  onSuccess,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+}) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,6 +49,7 @@ export default function AddUserModal({ isOpen, onClose }: { isOpen: boolean; onC
         return;
       }
 
+      onSuccess?.(); // Chama o onSuccess para refresh da lista
       onClose();
       setLoading(false);
     } catch (error) {
@@ -53,7 +62,6 @@ export default function AddUserModal({ isOpen, onClose }: { isOpen: boolean; onC
     <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50 overflow-y-auto font-poppins">
       <div className="flex min-h-screen items-center justify-center px-4">
         <Dialog.Panel className="bg-white rounded-2xl shadow-xl p-10 w-full max-w-xl">
-          {/* LOGO + TÍTULO ACESSÍVEL */}
           <div className="flex flex-col items-center mb-6">
             <Image src="/logo.png" alt="MechStand" width={100} height={100} />
             <Dialog.Title as="h1" className="text-3xl md:text-4xl font-bold text-black mt-4">
@@ -61,7 +69,6 @@ export default function AddUserModal({ isOpen, onClose }: { isOpen: boolean; onC
             </Dialog.Title>
           </div>
 
-          {/* FORMULÁRIO */}
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-4">

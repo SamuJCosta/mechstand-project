@@ -4,7 +4,17 @@ import { Dialog } from "@headlessui/react"
 import { authFetch } from "@/utils/authFetch"
 import { useState } from "react"
 
-export default function DeleteUserModal({ userId, isOpen, onClose }: { userId: number; isOpen: boolean; onClose: () => void }) {
+export default function DeleteUserModal({
+  userId,
+  isOpen,
+  onClose,
+  onSuccess,  // <-- adiciona aqui
+}: {
+  userId: number
+  isOpen: boolean
+  onClose: () => void
+  onSuccess?: () => void // torna opcional
+}) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -21,6 +31,7 @@ export default function DeleteUserModal({ userId, isOpen, onClose }: { userId: n
       const data = await res.json()
       setError(data.error || "Erro ao remover utilizador")
     } else {
+      onSuccess?.() // chama onSuccess se definido
       onClose()
     }
 
