@@ -13,7 +13,12 @@ export async function DELETE(req: Request) {
 
     const decoded = verifyAccessToken(token)
 
-    if (!decoded || typeof decoded !== 'object' || decoded.role !== 'MECANICO') {
+    const isMecanicoOuAdmin =
+      decoded &&
+      typeof decoded === 'object' &&
+      (decoded.role === 'MECANICO' || decoded.role === 'ADMIN')
+
+    if (!isMecanicoOuAdmin) {
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
     }
 
@@ -29,7 +34,7 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ message: 'Peça removida com sucesso!' })
   } catch (err) {
-    console.error(err)
+    console.error('Erro ao remover peça:', err)
     return NextResponse.json({ error: 'Erro ao remover peça' }, { status: 500 })
   }
 }

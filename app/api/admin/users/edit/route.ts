@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hashPassword } from "@/lib/auth";
 import { verifyAccessToken } from "@/lib/auth";
-import { sendWelcomeEmail } from "@/lib/sendwelcomeemail";
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
   try {
     const authHeader = req.headers.get("authorization");
     const token = authHeader?.split(" ")[1];
@@ -19,40 +17,54 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Acesso negado" }, { status: 403 });
     }
 
-    const { username, email, password, role } = await req.json();
+    const { id, name, username, email, role } = await req.json();
 
-    const exists = await prisma.user.findFirst({
+    if (!id || !name || !username || !email || !role) {
+      return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser) {
+      return NextResponse.json({ error: "Utilizador não encontrado" }, { status: 404 });
+    }
+
+    // Verifica se o novo email ou username já estão em uso por outro utilizador
+    const conflictUser = await prisma.user.findFirst({
       where: {
-        OR: [{ email }, { username }],
+        AND: [
+          {
+            OR: [
+              { email: email },
+              { username: username },
+            ],
+          },
+          {
+            NOT: { id: id },
+          },
+        ],
       },
     });
 
-    if (exists) {
-      return NextResponse.json({ error: "Email ou username já em uso" }, { status: 400 });
+    if (conflictUser) {
+      return NextResponse.json({ error: "Email ou username já em uso por outro utilizador" }, { status: 400 });
     }
 
-    const hashedPassword = await hashPassword(password);
-
-    const user = await prisma.user.create({
+    const updatedUser = await prisma.user.update({
+      where: { id },
       data: {
+        name,
         username,
         email,
-        password: hashedPassword,
         role,
-        name: username,
       },
     });
 
-    if (role === "MECANICO") {
-      try {
-        await sendWelcomeEmail(email, username, role, password);  // envia a senha original
-      } catch (emailError) {
-        console.error("Erro ao enviar email de boas-vindas:", emailError);
-      }
-    }
-
-    return NextResponse.json({ message: "Utilizador criado com sucesso!", user });
+    return NextResponse.json({ message: "Utilizador atualizado com sucesso", user: updatedUser });
   } catch (err) {
-    return NextResponse.json({ error: "Erro ao criar utilizador" }, { status: 500 });
+    console.error("Erro ao atualizar utilizador:", err);
+    return NextResponse.json({ error: "Erro ao atualizar utilizador" }, { status: 500 });
   }
 }

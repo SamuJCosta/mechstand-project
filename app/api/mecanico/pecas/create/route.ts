@@ -13,7 +13,12 @@ export async function POST(req: Request) {
 
     const decoded = verifyAccessToken(token)
 
-    if (!decoded || typeof decoded !== 'object' || decoded.role !== 'MECANICO') {
+    const isMecanicoOuAdmin =
+      decoded &&
+      typeof decoded === 'object' &&
+      (decoded.role === 'MECANICO' || decoded.role === 'ADMIN')
+
+    if (!isMecanicoOuAdmin) {
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
     }
 
@@ -29,7 +34,7 @@ export async function POST(req: Request) {
         descricao,
         quantidade,
         preco,
-        criadoPorId: decoded.userId, 
+        criadoPorId: decoded.userId,
       },
     })
 

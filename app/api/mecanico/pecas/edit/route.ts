@@ -13,7 +13,12 @@ export async function PUT(req: Request) {
 
     const decoded = verifyAccessToken(token)
 
-    if (!decoded || typeof decoded !== 'object' || decoded.role !== 'MECANICO') {
+    const isMecanicoOuAdmin =
+      decoded &&
+      typeof decoded === 'object' &&
+      (decoded.role === 'MECANICO' || decoded.role === 'ADMIN')
+
+    if (!isMecanicoOuAdmin) {
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
     }
 
@@ -21,6 +26,19 @@ export async function PUT(req: Request) {
 
     if (!id || !nome || preco == null || quantidade == null) {
       return NextResponse.json({ error: 'Campos obrigatórios em falta.' }, { status: 400 })
+    }
+
+    const pecaExistente = await prisma.peca.findUnique({
+      where: { id },
+    })
+
+    if (!pecaExistente) {
+      return NextResponse.json({ error: 'Peça não encontrada.' }, { status: 404 })
+    }
+
+    // Se não for ADMIN e não foi quem criou, não pode editar
+    if (decoded.role !== 'ADMIN' && pecaExistente.criadoPorId !== decoded.userId) {
+      return NextResponse.json({ error: 'Sem permissão para editar esta peça.' }, { status: 403 })
     }
 
     const pecaAtualizada = await prisma.peca.update({
@@ -35,7 +53,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ message: 'Peça atualizada com sucesso!', peca: pecaAtualizada })
   } catch (err) {
-    console.error(err)
+    console.error('Erro ao atualizar peça:', err)
     return NextResponse.json({ error: 'Erro ao atualizar peça' }, { status: 500 })
   }
 }
