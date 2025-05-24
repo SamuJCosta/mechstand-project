@@ -11,6 +11,7 @@ import {
   House,
   Car,
   List,
+  BadgeEuro,
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../../tooltip";
 import { NavItem } from "@/components/domains/admin/layout/nav-item";
@@ -38,6 +39,9 @@ export const DesktopNav = () => (
       </NavItem>
       <NavItem href="/admin/sidebar/carros" label="Carros">
         <Car className="h-5 w-5" />
+      </NavItem>
+            <NavItem href="/admin/sidebar/vendas" label="Vendas">
+        <BadgeEuro className="h-5 w-5" />
       </NavItem>
     </nav>
     <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">

@@ -72,6 +72,8 @@ model Anuncio {
   imagens      CarroImagem[]
   createdAt    DateTime      @default(now())
   status       String        @default("disponivel")
+  venda        Venda?     
+
 }
 
 model CarroImagem {
@@ -79,4 +81,12 @@ model CarroImagem {
   url        String   @db.MediumText
   anuncioId  Int
   anuncio    Anuncio  @relation(fields: [anuncioId], references: [id])
+}
+
+model Venda {
+  id         Int       @id @default(autoincrement())
+  anuncioId  Int       @unique
+  anuncio    Anuncio   @relation(fields: [anuncioId], references: [id])
+  valor      Float
+  data       DateTime  @default(now())
 }
