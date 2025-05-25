@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 interface Props {
   titulo: string
   preco: number
@@ -7,9 +9,32 @@ interface Props {
 }
 
 export default function ComprarBotao({ titulo, preco, anuncioId }: Props) {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null
+  const [role, setRole] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken')
+    if (!token) {
+      setRole(null)
+      setLoading(false)
+      return
+    }
+
+    fetch('/api/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        setRole(data.role)
+      })
+      .catch(() => setRole(null))
+      .finally(() => setLoading(false))
+  }, [])
 
   const handleClick = async () => {
+    const token = localStorage.getItem('accessToken')
     if (!token) {
       alert('Precisas de estar autenticado para comprar.')
       return
@@ -31,6 +56,10 @@ export default function ComprarBotao({ titulo, preco, anuncioId }: Props) {
       alert(data.error || 'Erro ao redirecionar para o checkout.')
     }
   }
+
+  if (loading) return null
+
+  if (role !== 'CLIENT') return null
 
   return (
     <button

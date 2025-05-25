@@ -5,7 +5,7 @@ import "./globals.css";
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["400", "800"], // Adiciona os pesos corretos
+  weight: ["400", "800"],
 });
 
 const smoochSans = Smooch_Sans({
