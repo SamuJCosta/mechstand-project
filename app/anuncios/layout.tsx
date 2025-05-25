@@ -1,5 +1,5 @@
-import { DashboardLayout } from "../../components/domains/mecanico/layout/dashboardlayoutm";
+import { DashboardLayoutPublic } from "../../components/domains/publico/layout/dashboardlayoutp";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <DashboardLayout>{children}</DashboardLayout>
+  return <DashboardLayoutPublic>{children}</DashboardLayoutPublic>
 }

@@ -1,4 +1,4 @@
-import StandAnunciosList from '../../../../components/domains/mecanico/stand/anuncios'
+import StandAnunciosList from '../../../../components/domains/publico/stand/anuncios'
 
 export default function StandPage() {
   return (

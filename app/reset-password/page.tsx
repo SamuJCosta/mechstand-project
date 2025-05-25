@@ -83,7 +83,7 @@ const ResetPassword = () => {
           </div>
 
           {/* MENSAGEM DE ERRO OU SUCESSO */}
-          {message && <p className="text-red-500 text-center mb-4">{message}</p>}
+          {message && <p className="text-green-500 text-center mb-4">{message}</p>}
 
           {/* FORMULÁRIO */}
           {tokenValid ? (

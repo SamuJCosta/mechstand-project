@@ -23,7 +23,7 @@ export async function sendWelcomeEmail(
       <div style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px;">
         <div style="max-width: 600px; margin: auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
           <div style="background: #222; color: white; padding: 20px; text-align: center;">
-            <img src="cid:logo" alt="MechStand Logo" width="100" style="margin-bottom: 10px; margin-left: 30px" />
+            <img src="cid:logo" alt="MechStand Logo" width="100" style="margin-bottom: 10px; margin-left: 24px" />
             <h1 style="margin: 0; font-size: 24px;">MechStand</h1>
           </div>
           <div style="padding: 30px; color: #333;">
@@ -55,7 +55,7 @@ export async function sendWelcomeEmail(
     attachments: [
       {
         filename: "logo.png",
-        path: path.resolve("./public/logo.png"),
+        path: path.resolve("./public/LogoBlack.png"),
         cid: "logo",
       },
     ],

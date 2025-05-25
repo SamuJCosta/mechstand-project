@@ -1,7 +1,9 @@
-export default function HomePageUser() {
-    return(
-    <div className ="text-3xl">
-        <h1> Bem-vindo ao seu perfil de Stand! </h1>
-    </div>
-    );
-  }
+import StandAnunciosList from '../../../../components/domains/publico/stand/anuncios'
+
+export default function StandPage() {
+  return (
+    <main className="p-6">
+      <StandAnunciosList />
+    </main>
+  )
+}
