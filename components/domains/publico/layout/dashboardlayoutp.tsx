@@ -2,17 +2,21 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { DesktopNav } from "./desktopnav"
+import { authFetch } from "@/utils/authFetch"
+import Providers from "./providers"
 import { MobileNav } from "./mobilenav"
 import { SearchInput } from "./search"
 import { User } from "./user"
-import Providers from "./providers"
-import { authFetch } from "@/utils/authFetch"
+
+import { DesktopNav as DesktopNavMecanico } from "@/components/domains/mecanico/layout/desktopnav"
+import { DesktopNav as DesktopNavAdmin } from "@/components/domains/admin/layout/desktopnav"
+import { DesktopNav as DesktopNavCliente } from "@/components/domains/cliente/layout/desktopnav"
 
 const allowedRoles = ["ADMIN", "CLIENT", "MECANICO"]
 
 export const DashboardLayoutPublic = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [userRole, setUserRole] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -21,9 +25,8 @@ export const DashboardLayoutPublic = ({ children }: { children: React.ReactNode 
         const res = await authFetch("/api/auth/me")
         if (res.ok) {
           const data = await res.json()
-
           if (allowedRoles.includes(data.role)) {
-            setIsAuthorized(true)
+            setUserRole(data.role)
           } else {
             router.push("/login")
           }
@@ -32,18 +35,33 @@ export const DashboardLayoutPublic = ({ children }: { children: React.ReactNode 
         }
       } catch (error) {
         router.push("/login")
+      } finally {
+        setLoading(false)
       }
     }
 
     checkAuthorization()
   }, [router])
 
-  if (!isAuthorized) return null
+  if (loading || !userRole) return null
+
+  const renderSidebar = () => {
+    switch (userRole) {
+      case "MECANICO":
+        return <DesktopNavMecanico />
+      case "ADMIN":
+        return <DesktopNavAdmin />
+      case "CLIENT":
+        return <DesktopNavCliente />
+      default:
+        return null
+    }
+  }
 
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
-        <DesktopNav />
+        {renderSidebar()}
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
             <MobileNav />
