@@ -18,9 +18,12 @@ model user {
   refreshToken    String?
   profileImage    String?    @default("/userimage.png")
 
-  pecasCriadas    Peca[]     @relation("UserPecas")
-  carros          Carro[]    @relation("ClienteCarros")
-  anunciosCriados Anuncio[]  @relation("UserAnuncios")
+  pecasCriadas         Peca[]       @relation("UserPecas")
+  carros               Carro[]      @relation("ClienteCarros")
+  anunciosCriados      Anuncio[]    @relation("UserAnuncios")
+  clienteReparacoes    Reparacao[]  @relation("ClienteReparacoes")
+  mecanicoReparacoes   Reparacao[]  @relation("MecanicoReparacoes")
+  notificacoes         Notificacao[]
 }
 
 enum Role {
@@ -58,6 +61,7 @@ model Carro {
   createdAt       DateTime  @default(now())
 
   anuncio         Anuncio?
+  reparacoes      Reparacao[] @relation("CarroReparacoes")
 }
 
 model Anuncio {
@@ -73,7 +77,6 @@ model Anuncio {
   createdAt    DateTime      @default(now())
   status       String        @default("disponivel")
   venda        Venda?     
-
 }
 
 model CarroImagem {
@@ -89,4 +92,42 @@ model Venda {
   anuncio    Anuncio   @relation(fields: [anuncioId], references: [id])
   valor      Float
   data       DateTime  @default(now())
+}
+
+model Reparacao {
+  id             Int              @id @default(autoincrement())
+  titulo         String
+  descricao      String?
+  dataDesejada   DateTime
+  dataConfirmada DateTime?
+  estado         EstadoReparacao @default(PENDENTE)
+
+  clienteId      Int
+  cliente        user             @relation("ClienteReparacoes", fields: [clienteId], references: [id])
+
+  mecanicoId     Int?
+  mecanico       user?            @relation("MecanicoReparacoes", fields: [mecanicoId], references: [id])
+
+  carroId        Int?             // Opcional
+  carro          Carro?           @relation("CarroReparacoes", fields: [carroId], references: [id])
+
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+enum EstadoReparacao {
+  PENDENTE
+  ACEITE
+  RECUSADA
+  REAGENDAR
+  CONCLUIDA
+}
+
+model Notificacao {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      user     @relation(fields: [userId], references: [id])
+  mensagem  String
+  lida      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }

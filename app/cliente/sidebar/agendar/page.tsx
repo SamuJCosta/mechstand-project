@@ -1,7 +1,9 @@
-export default function HomePageUser() {
-    return(
-    <div className ="text-3xl">
-        <h1> Bem-vindo ao seu agendar! </h1>
+import AgendarReparacaoForm from "@/components/domains/cliente/agendar/agendar";
+
+export default function AgendarReparacaoPage() {
+  return (
+    <div className="p-8">
+      <AgendarReparacaoForm />
     </div>
-    );
-  }
+  )
+}

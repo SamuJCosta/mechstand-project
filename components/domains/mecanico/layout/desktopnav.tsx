@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ClipboardList, Wrench, Users, CarFront, Settings, House, List, Car } from "lucide-react"
+import { ClipboardList, Wrench, Users, CarFront, Settings, House, List, Car, Bell } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../../tooltip"
 import { NavItem } from "@/components/domains/publico/layout/nav-item"
 
@@ -26,6 +26,9 @@ export const DesktopNav = () => (
       </NavItem>
       <NavItem href="/mecanico/sidebar/carros" label="Carros">
         <Car className="h-5 w-5" />
+      </NavItem>
+      <NavItem href="/mecanico/sidebar/notificacoes" label="Notificações">
+        <Bell className="h-5 w-5" />
       </NavItem>
     </nav>
     <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
