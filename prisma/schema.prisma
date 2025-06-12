@@ -16,7 +16,7 @@ model user {
   role            String
   createdAt       DateTime   @default(now())
   refreshToken    String?
-  profileImage    String?    @default("/userimage.png")
+  profileImage    String?    @db.MediumText
 
   pecasCriadas         Peca[]       @relation("UserPecas")
   carros               Carro[]      @relation("ClienteCarros")
@@ -49,7 +49,7 @@ model Carro {
   id              Int       @id @default(autoincrement())
   matricula       String    @unique
   marca           String
-  modelo          String
+  modelo          String  
   ano             Int
   tipoCombustivel String
   potencia        Int
