@@ -17,13 +17,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Apenas clientes podem agendar reparações." }, { status: 403 })
     }
 
-    const { titulo, descricao, dataDesejada, carroId, mecanicoId } = await req.json()
+    const body = await req.json()
+
+    const {
+      titulo,
+      descricao,
+      dataDesejada,
+      carroId,
+      mecanicoId: rawMecanicoId,
+    } = body
 
     if (!titulo || !dataDesejada) {
       return NextResponse.json({ error: "Título e data desejada são obrigatórios." }, { status: 400 })
     }
 
-    // Valida se o carro existe
+    const mecanicoId = rawMecanicoId && !isNaN(Number(rawMecanicoId))
+      ? parseInt(rawMecanicoId)
+      : null
+
     if (carroId) {
       const carro = await prisma.carro.findUnique({ where: { id: carroId } })
       if (!carro) {
@@ -38,12 +49,11 @@ export async function POST(req: Request) {
         dataDesejada: new Date(dataDesejada),
         clienteId: decoded.userId,
         carroId: carroId || null,
-        mecanicoId: mecanicoId || null,
+        mecanicoId: mecanicoId,
       },
     })
 
     if (mecanicoId) {
-      // Notificar apenas o mecânico escolhido
       await prisma.notificacao.create({
         data: {
           userId: mecanicoId,
@@ -51,7 +61,6 @@ export async function POST(req: Request) {
         },
       })
     } else {
-      // Notificar todos os mecânicos
       const mecanicos = await prisma.user.findMany({
         where: { role: "MECANICO" },
       })

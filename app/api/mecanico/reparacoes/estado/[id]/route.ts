@@ -32,6 +32,9 @@ export async function PATCH(req: Request) {
     }
 
     const { estado, novaData } = await req.json()
+    if (!estado) {
+      return NextResponse.json({ error: "Estado é obrigatório" }, { status: 400 })
+    }
 
     const reparacao = await prisma.reparacao.findUnique({
       where: { id: reparacaoId },
@@ -42,20 +45,31 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Reparação não encontrada" }, { status: 404 })
     }
 
-    if (estado === "ACEITE" && reparacao.mecanicoId) {
-      return NextResponse.json({ error: "Já atribuída a outro mecânico" }, { status: 400 })
+    if (
+      estado === "ACEITE" &&
+      reparacao.mecanicoId &&
+      reparacao.mecanicoId !== decoded.userId
+    ) {
+      return NextResponse.json(
+        { error: "Reparação já atribuída a outro mecânico" },
+        { status: 400 }
+      )
     }
 
-    const dataUpdate: any = {
-      estado,
-    }
+    const dataUpdate: any = { estado }
 
     if (estado === "ACEITE") {
       dataUpdate.mecanicoId = decoded.userId
       dataUpdate.dataConfirmada = new Date(reparacao.dataDesejada)
     }
 
-    if (estado === "REAGENDAR" && novaData) {
+    if (estado === "REAGENDAR") {
+      if (!novaData) {
+        return NextResponse.json(
+          { error: "Nova data é obrigatória para reagendamento" },
+          { status: 400 }
+        )
+      }
       dataUpdate.dataConfirmada = new Date(novaData)
     }
 
@@ -69,7 +83,7 @@ export async function PATCH(req: Request) {
     })
 
     if (reparacao.cliente?.email && reparacao.cliente?.name) {
-      if (estado === "REAGENDAR" && novaData) {
+      if (estado === "REAGENDAR") {
         await sendReparacaoReagendadaEmail({
           to: reparacao.cliente.email,
           username: reparacao.cliente.name,
@@ -89,7 +103,10 @@ export async function PATCH(req: Request) {
 
     return NextResponse.json(updated)
   } catch (err) {
-    console.error(err)
-    return NextResponse.json({ error: "Erro ao atualizar reparação" }, { status: 500 })
+    console.error("Erro ao atualizar reparação:", err)
+    return NextResponse.json(
+      { error: "Erro ao atualizar reparação" },
+      { status: 500 }
+    )
   }
 }

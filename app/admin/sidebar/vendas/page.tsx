@@ -16,10 +16,12 @@ import {
 } from '@/components/card'
 
 export default async function VendasList({
-  searchParams,
+  searchParams: rawSearchParams,
 }: {
-  searchParams: { page?: string }
+  searchParams: Promise<{ page?: string }>
 }) {
+  const searchParams = await rawSearchParams
+
   const page = Number(searchParams?.page || 1)
   const pageSize = 10
   const skip = (page - 1) * pageSize
