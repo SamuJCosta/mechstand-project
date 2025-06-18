@@ -31,7 +31,7 @@ export default function DeleteUserModal({
       const data = await res.json()
       setError(data.error || "Erro ao remover utilizador")
     } else {
-      onSuccess?.() // chama onSuccess se definido
+      onSuccess?.()
       onClose()
     }
 

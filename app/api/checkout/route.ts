@@ -48,7 +48,7 @@ export async function POST(req: Request) {
         },
       ],
       success_url: `${req.headers.get('origin')}/payment/sucesso?anuncioId=${anuncioId}`,
-      cancel_url: `${req.headers.get('origin')}/cancelado`,
+      cancel_url: `${req.headers.get('origin')}/payment/cancelado?anuncioId=${anuncioId}`,
     })
 
     return new Response(JSON.stringify({ url: session.url }), {
