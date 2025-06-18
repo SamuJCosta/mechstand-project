@@ -96,6 +96,22 @@ export default function HomePageUser() {
               setModalAberto(true)
             }}
           />
+
+          {/* Legenda de cores */}
+          <div className="mt-6 flex flex-wrap gap-4 text-sm text-gray-700">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-4 h-4 rounded-full bg-blue-500" />
+              Reparações Aceites
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-4 h-4 rounded-full bg-orange-400" />
+              Reagendadas
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-4 h-4 rounded-full bg-green-500" />
+              Concluídas
+            </div>
+          </div>
         </CardContent>
       </Card>
 

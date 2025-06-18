@@ -54,10 +54,11 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ url: session.url }), {
       status: 200,
     })
-  } catch (err) {
-    console.error('Erro no checkout:', err)
-    return new Response(JSON.stringify({ error: 'Erro ao criar sessão' }), {
-      status: 500,
-    })
-  }
+} catch (err: any) {
+  console.error('Erro no checkout:', err?.message || err)
+  return new Response(JSON.stringify({ error: err?.message || 'Erro ao criar sessão' }), {
+    status: 500,
+  })
+}
+
 }

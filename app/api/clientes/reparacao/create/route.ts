@@ -17,13 +17,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Apenas clientes podem agendar reparações." }, { status: 403 })
     }
 
-    const { titulo, descricao, dataDesejada, carroId } = await req.json()
+    const { titulo, descricao, dataDesejada, carroId, mecanicoId } = await req.json()
 
     if (!titulo || !dataDesejada) {
       return NextResponse.json({ error: "Título e data desejada são obrigatórios." }, { status: 400 })
     }
 
-    // Se carroId estiver presente, verifica se o carro existe
+    // Valida se o carro existe
     if (carroId) {
       const carro = await prisma.carro.findUnique({ where: { id: carroId } })
       if (!carro) {
@@ -38,20 +38,31 @@ export async function POST(req: Request) {
         dataDesejada: new Date(dataDesejada),
         clienteId: decoded.userId,
         carroId: carroId || null,
+        mecanicoId: mecanicoId || null,
       },
     })
 
-    // Notificar todos os mecânicos
-    const mecanicos = await prisma.user.findMany({
-      where: { role: "MECANICO" },
-    })
+    if (mecanicoId) {
+      // Notificar apenas o mecânico escolhido
+      await prisma.notificacao.create({
+        data: {
+          userId: mecanicoId,
+          mensagem: `Nova reparação atribuída: ${titulo}`,
+        },
+      })
+    } else {
+      // Notificar todos os mecânicos
+      const mecanicos = await prisma.user.findMany({
+        where: { role: "MECANICO" },
+      })
 
-    await prisma.notificacao.createMany({
-      data: mecanicos.map((m) => ({
-        userId: m.id,
-        mensagem: `Nova reparação pendente: ${titulo}`,
-      })),
-    })
+      await prisma.notificacao.createMany({
+        data: mecanicos.map((m) => ({
+          userId: m.id,
+          mensagem: `Nova reparação pendente: ${titulo}`,
+        })),
+      })
+    }
 
     return NextResponse.json({
       message: "Reparação agendada com sucesso!",
@@ -59,9 +70,6 @@ export async function POST(req: Request) {
     })
   } catch (err) {
     console.error(err)
-    return NextResponse.json(
-      { error: "Erro ao criar reparação" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Erro ao criar reparação" }, { status: 500 })
   }
 }

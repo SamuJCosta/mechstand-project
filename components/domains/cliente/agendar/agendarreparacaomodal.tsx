@@ -15,12 +15,21 @@ interface Carro {
   matricula: string
 }
 
+interface Mecanico {
+  id: number
+  name: string
+  media: number | null
+  totalAvaliacoes: number
+}
+
 export default function AgendarReparacaoModal({ isOpen, onClose, onSuccess }: Props) {
   const [titulo, setTitulo] = useState("")
   const [descricao, setDescricao] = useState("")
   const [dataDesejada, setDataDesejada] = useState("")
   const [carroId, setCarroId] = useState<number | "">("")
+  const [mecanicoId, setMecanicoId] = useState<number | "">("")
   const [carros, setCarros] = useState<Carro[]>([])
+  const [mecanicos, setMecanicos] = useState<Mecanico[]>([])
   const [loading, setLoading] = useState(false)
   const [erro, setErro] = useState("")
 
@@ -46,7 +55,24 @@ export default function AgendarReparacaoModal({ isOpen, onClose, onSuccess }: Pr
       }
     }
 
+    const fetchMecanicos = async () => {
+      try {
+        const res = await fetch("/api/clientes/mecanicos", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          setMecanicos(data)
+        }
+      } catch (err) {
+        console.error("Erro ao buscar mecânicos")
+      }
+    }
+
     fetchCarros()
+    fetchMecanicos()
   }, [isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,6 +92,7 @@ export default function AgendarReparacaoModal({ isOpen, onClose, onSuccess }: Pr
           descricao,
           dataDesejada,
           carroId: carroId || null,
+          mecanicoId: mecanicoId || null,
         }),
       })
 
@@ -89,6 +116,7 @@ export default function AgendarReparacaoModal({ isOpen, onClose, onSuccess }: Pr
     setDescricao("")
     setDataDesejada("")
     setCarroId("")
+    setMecanicoId("")
     setErro("")
     onClose()
   }
@@ -153,6 +181,22 @@ export default function AgendarReparacaoModal({ isOpen, onClose, onSuccess }: Pr
           ) : (
             <p className="text-sm text-gray-600">Sem veículos registados.</p>
           )}
+        </div>
+
+        <div>
+          <label className="block font-medium">Mecânico</label>
+          <select
+            value={mecanicoId}
+            onChange={(e) => setMecanicoId(e.target.value ? parseInt(e.target.value) : "")}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">-- Sem preferência --</option>
+            {mecanicos.map((mec) => (
+              <option key={mec.id} value={mec.id}>
+                {mec.name} {mec.media ? `⭐ ${mec.media} (${mec.totalAvaliacoes})` : "(Sem avaliações)"}
+              </option>
+            ))}
+          </select>
         </div>
 
         {erro && <p className="text-red-600">{erro}</p>}

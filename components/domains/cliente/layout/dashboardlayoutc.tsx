@@ -9,7 +9,7 @@ import { authFetch } from "@/utils/authFetch"
 import { DesktopNav } from "./desktopnav"
 import { MobileNav } from "./mobilenav"
 import { useAutoRefreshToken } from "../../../../hooks/useauthrefresh"
-
+import { Toaster } from "react-hot-toast" // 👈 IMPORTA AQUI
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [isAuthorized, setIsAuthorized] = useState(false)
@@ -43,6 +43,7 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
 
   return (
     <Providers>
+      <Toaster position="top-right" /> {/* 👈 AQUI ESTÁ O TOASTER */}
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
         <DesktopNav />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">

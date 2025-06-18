@@ -11,19 +11,17 @@ export async function GET(req: Request) {
 
     const decoded = verifyAccessToken(token)
 
-    if (
-      !decoded ||
-      typeof decoded !== "object" ||
-      !("role" in decoded) ||
-      decoded.role !== "MECANICO"
-    ) {
+    if (!decoded || typeof decoded !== "object" || decoded.role !== "MECANICO") {
       return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
     }
 
     const pendentes = await prisma.reparacao.findMany({
       where: {
         estado: "PENDENTE",
-        mecanicoId: null,
+        OR: [
+          { mecanicoId: null },
+          { mecanicoId: decoded.userId },
+        ],
       },
       include: {
         cliente: true,
