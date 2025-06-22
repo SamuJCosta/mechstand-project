@@ -100,10 +100,10 @@ model Venda {
 model Reparacao {
   id             Int              @id @default(autoincrement())
   titulo         String
-  descricao      String?
+  descricao      String?          @db.Text
   dataDesejada   DateTime
   dataConfirmada DateTime?
-  estado         EstadoReparacao @default(PENDENTE)
+  estado         EstadoReparacao  @default(PENDENTE)
 
   clienteId      Int
   cliente        user             @relation("ClienteReparacoes", fields: [clienteId], references: [id])

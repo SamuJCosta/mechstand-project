@@ -49,7 +49,7 @@ export default function ClienteCarrosList() {
           className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
         >
           {carro.imagemUrl ? (
-            <div className="w-full h-40 overflow-hidden">
+            <div className="w-full h-48 overflow-hidden">
               <img
                 src={carro.imagemUrl}
                 alt={`Imagem do carro ${carro.marca} ${carro.modelo}`}
@@ -57,7 +57,7 @@ export default function ClienteCarrosList() {
               />
             </div>
           ) : (
-            <div className="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+            <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
               Sem imagem
             </div>
           )}
@@ -78,4 +78,3 @@ export default function ClienteCarrosList() {
     </div>
   )
 }
-    

@@ -45,6 +45,7 @@ export default function RatingModal({
 
     if (res.ok) {
       toast.success("Avaliação enviada com sucesso!")
+      localStorage.setItem(`avaliado_${reparacao.id}`, "true")
       onClose()
     } else {
       const erro = await res.json()
@@ -54,11 +55,13 @@ export default function RatingModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl shadow-xl max-w-md w-full space-y-4">
+      <div className="bg-white p-6 rounded-xl shadow-xl max-w-md w-full max-h-screen overflow-y-auto space-y-4">
         <h2 className="text-xl font-bold">Avaliar Mecânico</h2>
-        <p className="text-sm text-black">
+
+        <p className="text-sm text-black break-words whitespace-pre-wrap">
           Reparação: <strong>{reparacao.titulo}</strong>
         </p>
+
         <div className="flex space-x-1">
           {[1, 2, 3, 4, 5].map((n) => (
             <button
@@ -71,13 +74,15 @@ export default function RatingModal({
             </button>
           ))}
         </div>
+
         <textarea
           placeholder="Comentário (opcional)"
           value={comentario}
           onChange={(e) => setComentario(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
+          className="w-full p-2 border border-gray-300 rounded resize-none max-h-40 overflow-y-auto"
           rows={3}
         />
+
         <div className="flex justify-end space-x-2">
           <button
             onClick={onClose}

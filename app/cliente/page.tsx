@@ -51,7 +51,6 @@ export default function HomePageCliente() {
   const [reparacoes, setReparacoes] = useState<Reparacao[]>([])
   const [anuncios, setAnuncios] = useState<Anuncio[]>([])
   const [avaliacaoPendente, setAvaliacaoPendente] = useState<ReparacaoParaAvaliar | null>(null)
-
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -59,6 +58,8 @@ export default function HomePageCliente() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('accessToken')
+        if (!token) return
+
         const headers = { Authorization: `Bearer ${token}` }
 
         const [userRes, carroRes, reparacaoRes, anuncioRes] = await Promise.all([
@@ -94,21 +95,32 @@ export default function HomePageCliente() {
     fetchData()
   }, [])
 
-  // Fetch para avaliação pendente
+  // ✅ Busca avaliações pendentes apenas quando token estiver disponível
   useEffect(() => {
+    const token = localStorage.getItem("accessToken")
+    if (!token) return
+
     const fetchPendentes = async () => {
       try {
         const res = await fetch("/api/clientes/reparacao/avaliar", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${token}`,
           },
         })
 
         const data = await res.json()
+        console.log("🔍 /avaliar:", data)
+
         if (Array.isArray(data) && data.length > 0) {
-          const id = data[0].id
-          if (!localStorage.getItem(`avaliado_${id}`)) {
-            setAvaliacaoPendente(data[0])
+          const naoAvaliadas = data.filter(
+            (r) => !localStorage.getItem(`avaliado_${r.id}`)
+          )
+
+          if (naoAvaliadas.length > 0) {
+            console.log(`✅ Vai mostrar modal para: ${naoAvaliadas[0].id}`)
+            setAvaliacaoPendente(naoAvaliadas[0])
+          } else {
+            console.log("⛔ Todas já avaliadas localmente")
           }
         }
       } catch (err) {
